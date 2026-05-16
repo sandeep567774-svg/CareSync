@@ -4,6 +4,7 @@ import { Mail, Lock, Activity } from 'lucide-react';
 export default function LandingPage({ onLogin }) {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('patient');
+  const [email, setEmail] = useState('');
 
   return (
     <div className="relative min-h-screen bg-soft-blue overflow-hidden flex flex-col font-sans text-gray-900">
@@ -33,7 +34,7 @@ export default function LandingPage({ onLogin }) {
           <div className="w-full max-w-sm p-8 bg-white/90 backdrop-blur-xl border border-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] animate-in fade-in slide-in-from-bottom-8 duration-500">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Welcome Back</h2>
             
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); onLogin(selectedRole); }}>
+            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); onLogin(selectedRole, email); }}>
               
               <div className="space-y-1">
                 <div className="relative">
@@ -41,6 +42,8 @@ export default function LandingPage({ onLogin }) {
                   <input 
                     type="email" 
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-teal focus:border-transparent outline-none transition-all text-gray-900 placeholder-gray-400"
                     placeholder="Email address"
                   />
