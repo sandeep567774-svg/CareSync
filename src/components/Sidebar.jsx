@@ -1,6 +1,6 @@
 import { User, Activity, Settings, ShieldAlert, Calendar, Clock, Users } from 'lucide-react';
 
-export default function Sidebar({ isOpen, onClose, currentRole }) {
+export default function Sidebar({ isOpen, onClose, currentRole, activeView, setActiveView }) {
   const patientLinks = [
     { id: 'patient', icon: User, label: 'Patient Dashboard' },
     { id: 'appointments', icon: Calendar, label: 'My Appointments' },
@@ -41,11 +41,12 @@ export default function Sidebar({ isOpen, onClose, currentRole }) {
           <nav className="space-y-1">
             {links.map((item) => {
               const Icon = item.icon;
-              const isActive = item.id === currentRole; // Highlight the main dashboard link
+              const isActive = item.id === currentRole && activeView === 'dashboard'; // Highlight the main dashboard link
               return (
                 <button
                   key={item.id}
                   onClick={() => {
+                    setActiveView('dashboard');
                     onClose();
                   }}
                   className={`
@@ -62,9 +63,13 @@ export default function Sidebar({ isOpen, onClose, currentRole }) {
               );
             })}
             <button
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors text-left text-gray-600 hover:bg-gray-50 hover:text-primary-teal"
+              onClick={() => {
+                setActiveView('settings');
+                onClose();
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors text-left ${activeView === 'settings' ? 'bg-soft-blue text-primary-teal' : 'text-gray-600 hover:bg-gray-50 hover:text-primary-teal'}`}
             >
-              <Settings className="w-5 h-5 text-gray-400" />
+              <Settings className={`w-5 h-5 ${activeView === 'settings' ? 'text-primary-teal' : 'text-gray-400'}`} />
               Settings
             </button>
           </nav>

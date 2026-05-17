@@ -5,7 +5,7 @@ import { Badge } from './ui/Badge';
 import { Card, CardContent } from './ui/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/Table';
 
-export default function PatientDashboard({ appointments, doctors, onBook, onCancel, searchQuery, setSearchQuery }) {
+export default function PatientDashboard({ appointments, doctors, onBook, onCancel, searchQuery, setSearchQuery, currentUserEmail, currentUserPhone }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');

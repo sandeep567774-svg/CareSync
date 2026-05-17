@@ -4,16 +4,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
 
-export default function DoctorDashboard() {
+export default function DoctorDashboard({ appointments, onCancel, onComplete }) {
   const stats = [
     { label: 'Total Patients', value: '1,482', icon: Users, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { label: 'Today\'s Appts', value: '12', icon: Calendar, color: 'text-teal-600', bg: 'bg-teal-100' },
-  ];
-
-  const schedule = [
-    { id: 1, time: '09:00 AM', patient: 'John Doe', type: 'Checkup', status: 'Scheduled' },
-    { id: 2, time: '10:30 AM', patient: 'Alice Smith', type: 'Follow-up', status: 'Completed' },
-    { id: 3, time: '01:00 PM', patient: 'Bob Johnson', type: 'Consultation', status: 'Scheduled' },
+    { label: 'Today\'s Appts', value: appointments.filter(a => a.status === 'Scheduled').length, icon: Calendar, color: 'text-teal-600', bg: 'bg-teal-100' },
   ];
 
   return (
@@ -54,31 +48,28 @@ export default function DoctorDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {schedule.map((apt) => (
+              {appointments.map((apt) => (
                 <TableRow key={apt.id}>
                   <TableCell className="font-medium text-gray-900">{apt.time}</TableCell>
                   <TableCell>{apt.patient}</TableCell>
-                  <TableCell className="text-gray-600">{apt.type}</TableCell>
+                  <TableCell className="text-gray-600">Consultation</TableCell>
                   <TableCell>
                     <Badge variant={apt.status.toLowerCase()}>
                       {apt.status}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    {apt.status === 'Scheduled' && (
+                    {apt.status === 'Scheduled' ? (
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
+                        <Button variant="outline" size="sm" onClick={() => onCancel(apt.id)} className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
                           Cancel
                         </Button>
-                        <Button size="sm">
+                        <Button size="sm" onClick={() => onComplete(apt.id)}>
                           Complete
                         </Button>
                       </div>
-                    )}
-                    {apt.status === 'Completed' && (
-                       <Button variant="ghost" size="sm" className="text-gray-400 cursor-not-allowed">
-                         Done
-                       </Button>
+                    ) : (
+                      <span className="text-sm font-medium text-gray-400">Done</span>
                     )}
                   </TableCell>
                 </TableRow>

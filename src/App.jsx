@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import CareSyncLayout from './components/CareSyncLayout';
 
@@ -6,7 +6,19 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentRole, setCurrentRole] = useState('patient');
   const [currentUserEmail, setCurrentUserEmail] = useState('');
+  const [currentUserPhone, setCurrentUserPhone] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  const toggleDarkMode = () => setDarkMode(!darkMode);
 
   const [doctors] = useState([
     { id: 1, name: 'Dr. Sarah Jenkins', spec: 'Cardiologist', rating: 4.9, image: `${import.meta.env.BASE_URL}dr_sarah.png` },
@@ -50,9 +62,10 @@ function App() {
   if (!isAuthenticated) {
     return (
       <LandingPage 
-        onLogin={(role, email) => {
+        onLogin={(role, email, password, phone) => {
           setCurrentRole(role);
           setCurrentUserEmail(email);
+          setCurrentUserPhone(phone);
           setIsAuthenticated(true);
         }} 
       />
@@ -72,6 +85,9 @@ function App() {
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
       currentUserEmail={currentUserEmail}
+      currentUserPhone={currentUserPhone}
+      darkMode={darkMode}
+      toggleDarkMode={toggleDarkMode}
     />
   );
 }

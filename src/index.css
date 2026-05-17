@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-soft-blue: #F0F9FF;
   --color-primary-teal: #0D9488;

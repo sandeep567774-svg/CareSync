@@ -1,13 +1,40 @@
 import { useState } from 'react';
-import { Mail, Lock, Activity } from 'lucide-react';
+import { Mail, Lock, Activity, Phone } from 'lucide-react';
 
 export default function LandingPage({ onLogin }) {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('patient');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (selectedRole === 'doctor') {
+      const isValid = 
+        (email === 'Doc1@gmail.com' && password === 'DOC1') ||
+        (email === 'Doc2@gmail.com' && password === 'DOC2') ||
+        (email === 'Doc3@gmail.com' && password === 'DOC3');
+      
+      if (!isValid) {
+        setError('Invalid Doctor Credentials. Please check your email and password.');
+        return;
+      }
+    } else if (selectedRole === 'admin') {
+      if (email !== 'Admin@gmail.com' || password !== 'Admin@CareSync') {
+        setError('Invalid Admin Credentials.');
+        return;
+      }
+    }
+
+    onLogin(selectedRole, email, password, phone);
+  };
 
   return (
-    <div className="relative min-h-screen bg-soft-blue overflow-hidden flex flex-col font-sans text-gray-900">
+    <div className="relative min-h-screen bg-soft-blue dark:bg-slate-900 overflow-hidden flex flex-col font-sans text-gray-900 dark:text-slate-100 transition-colors duration-300">
       
       {/* Background Gradients */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary-teal/20 rounded-full blur-[120px] mix-blend-multiply animate-pulse" />
@@ -34,7 +61,7 @@ export default function LandingPage({ onLogin }) {
           <div className="w-full max-w-sm p-8 bg-white/90 backdrop-blur-xl border border-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] animate-in fade-in slide-in-from-bottom-8 duration-500">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Welcome Back</h2>
             
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); onLogin(selectedRole, email); }}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               
               <div className="space-y-1">
                 <div className="relative">
@@ -56,11 +83,35 @@ export default function LandingPage({ onLogin }) {
                   <input 
                     type="password" 
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-teal focus:border-transparent outline-none transition-all text-gray-900 placeholder-gray-400"
                     placeholder="Password"
                   />
                 </div>
               </div>
+
+              {selectedRole === 'patient' && (
+                <div className="space-y-1">
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input 
+                      type="tel" 
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-teal focus:border-transparent outline-none transition-all text-gray-900 placeholder-gray-400"
+                      placeholder="Phone Number"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {error && (
+                <div className="text-red-500 text-sm font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+                  {error}
+                </div>
+              )}
 
               <div className="space-y-1 pt-2">
                 <label className="text-sm text-gray-600 px-1 font-medium">Select Role</label>
