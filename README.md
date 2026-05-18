@@ -70,7 +70,6 @@ This project is configured to be easily deployed to GitHub pages via the built-i
 ```bash
 npm run deploy
 ```
-*Note: Due to Windows/OneDrive pathing locks in certain local environments, it is recommended to pause OneDrive syncing while deploying.*
 
 ---
 *Built with ❤️ for modern healthcare systems.*

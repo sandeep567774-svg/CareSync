@@ -3,17 +3,14 @@ import { User, Activity, Settings, ShieldAlert, Calendar, Clock, Users } from 'l
 export default function Sidebar({ isOpen, onClose, currentRole, activeView, setActiveView }) {
   const patientLinks = [
     { id: 'patient', icon: User, label: 'Patient Dashboard' },
-    { id: 'appointments', icon: Calendar, label: 'My Appointments' },
   ];
   
   const doctorLinks = [
     { id: 'doctor', icon: Activity, label: 'Doctor Dashboard' },
-    { id: 'schedule', icon: Clock, label: 'My Schedule' },
   ];
   
   const adminLinks = [
     { id: 'admin', icon: ShieldAlert, label: 'Admin Panel' },
-    { id: 'users', icon: Users, label: 'Manage Users' },
   ];
 
   const links = currentRole === 'patient' ? patientLinks : currentRole === 'doctor' ? doctorLinks : adminLinks;
@@ -79,9 +76,12 @@ export default function Sidebar({ isOpen, onClose, currentRole, activeView, setA
           <div className="bg-soft-blue rounded-xl p-4 border border-teal-100">
             <h4 className="text-sm font-semibold text-primary-teal mb-1">Need Help?</h4>
             <p className="text-xs text-gray-600 mb-3">Contact CareSync support 24/7</p>
-            <button className="w-full bg-primary-teal text-white text-sm font-medium py-2 rounded-lg hover:bg-dark-teal transition-colors shadow-sm shadow-teal-200">
+            <a 
+              href="tel:8590500550"
+              className="block w-full bg-primary-teal text-white text-sm font-medium py-2 rounded-lg hover:bg-dark-teal transition-colors shadow-sm shadow-teal-200 text-center"
+            >
               Contact Support
-            </button>
+            </a>
           </div>
         </div>
       </aside>

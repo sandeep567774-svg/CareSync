@@ -174,7 +174,7 @@ export default function PatientDashboard({ appointments, doctors, onBook, onCanc
                 className="flex-1" 
                 disabled={!selectedDate || !selectedTime}
                 onClick={() => {
-                  onBook(selectedDoctor.name, selectedDate, selectedTime);
+                  onBook(selectedDoctor.name, selectedDate, selectedTime, currentUserPhone);
                   setIsModalOpen(false);
                   setSelectedDate('');
                   setSelectedTime('');

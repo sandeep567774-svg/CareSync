@@ -20,6 +20,10 @@ export default function CareSyncLayout({
       <TopNav 
         onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} 
         onLogout={onLogout}
+        currentRole={currentRole}
+        appointments={appointments}
+        currentUserEmail={currentUserEmail}
+        onNavigateSettings={() => setActiveView('settings')}
       />
       
       <div className="flex flex-1 overflow-hidden relative">
@@ -62,7 +66,7 @@ export default function CareSyncLayout({
                     currentUserEmail={currentUserEmail}
                   />
                 )}
-                {currentRole === 'admin' && <AdminPanel />}
+                {currentRole === 'admin' && <AdminPanel appointments={appointments} doctors={doctors} />}
               </>
             )}
           </div>

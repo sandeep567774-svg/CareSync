@@ -1,4 +1,4 @@
-import { Users, Calendar, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Users, Calendar, CheckCircle2, XCircle, Clock, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/Table';
 import { Badge } from './ui/Badge';
@@ -42,6 +42,7 @@ export default function DoctorDashboard({ appointments, onCancel, onComplete }) 
               <TableRow>
                 <TableHead>Time</TableHead>
                 <TableHead>Patient</TableHead>
+                <TableHead>Phone</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -52,6 +53,16 @@ export default function DoctorDashboard({ appointments, onCancel, onComplete }) 
                 <TableRow key={apt.id}>
                   <TableCell className="font-medium text-gray-900">{apt.time}</TableCell>
                   <TableCell>{apt.patient}</TableCell>
+                  <TableCell className="text-gray-600">
+                    {apt.phone ? (
+                      <a href={`tel:${apt.phone}`} className="flex items-center gap-1.5 text-primary-teal hover:underline">
+                        <Phone className="w-3.5 h-3.5" />
+                        {apt.phone}
+                      </a>
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-gray-600">Consultation</TableCell>
                   <TableCell>
                     <Badge variant={apt.status.toLowerCase()}>

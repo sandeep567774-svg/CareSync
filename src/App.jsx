@@ -32,7 +32,7 @@ function App() {
     { id: 103, doctor: 'Dr. Emily Rodriguez', date: 'Aug 05, 2026', time: '11:15 AM', status: 'Cancelled', patient: 'Bob Johnson' },
   ]);
 
-  const handleBook = (doctorName, date, time) => {
+  const handleBook = (doctorName, date, time, phone) => {
     const patientName = currentUserEmail ? currentUserEmail.split('@')[0] : 'Unknown';
     
     // Format YYYY-MM-DD to "Oct 24, 2026"
@@ -46,7 +46,8 @@ function App() {
       date: formattedDate,
       time: time || '09:00 AM',
       status: 'Scheduled',
-      patient: patientName
+      patient: patientName,
+      phone: phone || ''
     };
     setAppointments([...appointments, newApt]);
   };
