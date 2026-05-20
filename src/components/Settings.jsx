@@ -1,23 +1,61 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User, Bell, Shield, Moon, Monitor, Loader2, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 import { Button } from './ui/Button';
 
-export default function Settings({ currentUserEmail, currentUserPhone, darkMode, toggleDarkMode }) {
-  const [fullName, setFullName] = useState(currentUserEmail ? currentUserEmail.split('@')[0] : 'Unknown');
-  const [phone, setPhone] = useState(currentUserPhone || '');
+export default function Settings({ 
+  currentUserEmail, 
+  currentUserPhone, 
+  darkMode, 
+  toggleDarkMode,
+  currentUserDetails = {},
+  onUpdateProfile,
+  onChangePassword
+}) {
+  const [fullName, setFullName] = useState(currentUserDetails.name || (currentUserEmail ? currentUserEmail.split('@')[0] : 'Unknown'));
+  const [phone, setPhone] = useState(currentUserDetails.phone || currentUserPhone || '');
   const [compactView, setCompactView] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+
+  const [currentPasswordInput, setCurrentPasswordInput] = useState('');
+  const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  useEffect(() => {
+    if (currentUserDetails) {
+      if (currentUserDetails.name) setFullName(currentUserDetails.name);
+      if (currentUserDetails.phone !== undefined) setPhone(currentUserDetails.phone);
+    }
+  }, [currentUserDetails]);
 
   const handleSave = () => {
     setIsLoading(true);
     setSuccessMsg('');
     setTimeout(() => {
       setIsLoading(false);
-      setSuccessMsg('Settings saved successfully! 🟢');
-      setTimeout(() => setSuccessMsg(''), 3000);
-    }, 1000);
+      onUpdateProfile?.({ fullName, contactNumber: phone });
+      setSuccessMsg('Profile information updated successfully! 🟢');
+      setTimeout(() => setSuccessMsg(''), 4000);
+    }, 500);
+  };
+
+  const handleChangePasswordClick = (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      const res = onChangePassword?.(currentPasswordInput, newPasswordInput);
+      if (res && res.success) {
+        setCurrentPasswordInput('');
+        setNewPasswordInput('');
+        setSuccessMsg('Security settings updated. Password changed successfully! 🔒');
+        setTimeout(() => setSuccessMsg(''), 4000);
+      } else {
+        setPasswordError('Error: Current password does not match our records.');
+      }
+    }, 500);
   };
 
   return (
@@ -143,6 +181,8 @@ export default function Settings({ currentUserEmail, currentUserPhone, darkMode,
               <label className="text-sm font-medium text-gray-700">Current Password</label>
               <input 
                 type="password" 
+                value={currentPasswordInput}
+                onChange={(e) => setCurrentPasswordInput(e.target.value)}
                 className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-teal focus:border-transparent outline-none transition-all text-gray-900"
                 placeholder="Enter current password"
               />
@@ -151,12 +191,19 @@ export default function Settings({ currentUserEmail, currentUserPhone, darkMode,
               <label className="text-sm font-medium text-gray-700">New Password</label>
               <input 
                 type="password" 
+                value={newPasswordInput}
+                onChange={(e) => setNewPasswordInput(e.target.value)}
                 className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-teal focus:border-transparent outline-none transition-all text-gray-900"
                 placeholder="Enter new password"
               />
             </div>
+            {passwordError && (
+              <p className="text-red-500 text-sm font-medium animate-in fade-in">
+                {passwordError}
+              </p>
+            )}
             <div className="pt-2">
-              <Button variant="outline" onClick={handleSave} disabled={isLoading}>
+              <Button variant="outline" onClick={handleChangePasswordClick} disabled={isLoading}>
                 {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 Change Password
               </Button>

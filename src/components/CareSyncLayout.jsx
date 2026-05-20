@@ -10,7 +10,8 @@ export default function CareSyncLayout({
   currentRole, setCurrentRole, onLogout,
   appointments, doctors, onBook, onCancel, completeAppointment,
   searchQuery, setSearchQuery, currentUserEmail, currentUserPhone,
-  darkMode, toggleDarkMode
+  darkMode, toggleDarkMode,
+  onAddDoctor, currentUserDetails, onUpdateProfile, onChangePassword
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState('dashboard');
@@ -43,6 +44,9 @@ export default function CareSyncLayout({
                 currentUserPhone={currentUserPhone} 
                 darkMode={darkMode}
                 toggleDarkMode={toggleDarkMode}
+                currentUserDetails={currentUserDetails}
+                onUpdateProfile={onUpdateProfile}
+                onChangePassword={onChangePassword}
               />
             ) : (
               <>
@@ -66,7 +70,13 @@ export default function CareSyncLayout({
                     currentUserEmail={currentUserEmail}
                   />
                 )}
-                {currentRole === 'admin' && <AdminPanel appointments={appointments} doctors={doctors} />}
+                {currentRole === 'admin' && (
+                  <AdminPanel 
+                    appointments={appointments} 
+                    doctors={doctors} 
+                    onAddDoctor={onAddDoctor} 
+                  />
+                )}
               </>
             )}
           </div>

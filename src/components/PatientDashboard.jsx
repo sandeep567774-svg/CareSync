@@ -11,6 +11,11 @@ export default function PatientDashboard({ appointments, doctors, onBook, onCanc
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
+  const todayStr = new Date().toLocaleDateString('en-CA');
+  const formattedSelectedDate = selectedDate
+    ? new Date(selectedDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+    : '';
+
   const filteredDoctors = doctors.filter(doc => 
     doc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     doc.spec.toLowerCase().includes(searchQuery.toLowerCase())
@@ -142,6 +147,7 @@ export default function PatientDashboard({ appointments, doctors, onBook, onCanc
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Select Date</label>
                 <input 
                   type="date" 
+                  min={todayStr}
                   className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-primary-teal focus:border-transparent text-gray-700"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
@@ -151,19 +157,31 @@ export default function PatientDashboard({ appointments, doctors, onBook, onCanc
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Select Time</label>
                 <div className="flex flex-wrap gap-2">
-                  {['09:00 AM', '10:30 AM', '11:15 AM', '02:00 PM', '03:30 PM'].map(time => (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                        selectedTime === time 
-                          ? 'bg-primary-teal text-white shadow-sm' 
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
+                  {['09:00 AM', '10:30 AM', '11:15 AM', '02:00 PM', '03:30 PM'].map(time => {
+                    const isTaken = appointments.some(apt => 
+                      apt.doctor === selectedDoctor.name && 
+                      apt.date === formattedSelectedDate && 
+                      apt.time === time && 
+                      apt.status === 'Scheduled'
+                    );
+
+                    return (
+                      <button
+                        key={time}
+                        disabled={isTaken}
+                        onClick={() => setSelectedTime(time)}
+                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors border ${
+                          isTaken 
+                            ? 'bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed border-dashed border-gray-200' 
+                            : selectedTime === time 
+                              ? 'bg-primary-teal border-primary-teal text-white shadow-sm' 
+                              : 'bg-gray-100 border-transparent text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        {time} {isTaken && <span className="text-xs ml-1 opacity-70">🔒</span>}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>

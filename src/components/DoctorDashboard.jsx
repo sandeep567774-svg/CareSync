@@ -4,10 +4,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
 
-export default function DoctorDashboard({ appointments, onCancel, onComplete }) {
+export default function DoctorDashboard({ appointments, onCancel, onComplete, currentUserEmail }) {
+  const doctorNameMap = {
+    'Doc1@gmail.com': 'Dr. Sarah Jenkins',
+    'Doc2@gmail.com': 'Dr. Michael Chen',
+    'Doc3@gmail.com': 'Dr. Emily Rodriguez',
+  };
+  const loggedInDoctorName = doctorNameMap[currentUserEmail] || 'Unknown Doctor';
+
+  const doctorAppointments = appointments.filter(apt => apt.doctor === loggedInDoctorName);
+
   const stats = [
     { label: 'Total Patients', value: '1,482', icon: Users, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { label: 'Today\'s Appts', value: appointments.filter(a => a.status === 'Scheduled').length, icon: Calendar, color: 'text-teal-600', bg: 'bg-teal-100' },
+    { label: 'Today\'s Appts', value: doctorAppointments.filter(a => a.status === 'Scheduled').length, icon: Calendar, color: 'text-teal-600', bg: 'bg-teal-100' },
   ];
 
   return (
@@ -35,7 +44,7 @@ export default function DoctorDashboard({ appointments, onCancel, onComplete }) 
 
       {/* Daily Schedule */}
       <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Today's Schedule</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Appointment Schedule</h2>
         <Card>
           <Table>
             <TableHeader>
@@ -43,13 +52,14 @@ export default function DoctorDashboard({ appointments, onCancel, onComplete }) 
                 <TableHead>Time</TableHead>
                 <TableHead>Patient</TableHead>
                 <TableHead>Phone</TableHead>
+                <TableHead>Date</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {appointments.map((apt) => (
+              {doctorAppointments.length > 0 ? doctorAppointments.map((apt) => (
                 <TableRow key={apt.id}>
                   <TableCell className="font-medium text-gray-900">{apt.time}</TableCell>
                   <TableCell>{apt.patient}</TableCell>
@@ -63,6 +73,7 @@ export default function DoctorDashboard({ appointments, onCancel, onComplete }) 
                       <span className="text-gray-400">—</span>
                     )}
                   </TableCell>
+                  <TableCell className="text-gray-600">{apt.date}</TableCell>
                   <TableCell className="text-gray-600">Consultation</TableCell>
                   <TableCell>
                     <Badge variant={apt.status.toLowerCase()}>
@@ -84,7 +95,13 @@ export default function DoctorDashboard({ appointments, onCancel, onComplete }) 
                     )}
                   </TableCell>
                 </TableRow>
-              ))}
+              )) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-6 text-gray-500 font-medium">
+                    You have no scheduled appointments today.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </Card>
